@@ -1,5 +1,7 @@
 import json
 import pymongo
+import User_Functions
+
 
 def main():
     # connect to mongodb server
@@ -8,26 +10,38 @@ def main():
     # populate database if not exists
     populate_data(client)
 
-    # get collections from database
-    db = client["yelp_database"]
-    business_col = db['business']
-    review_col = db['review']
-    user_col = db['user']
+    while True:
+        print("Welcome to Business Details Application")
+        print("1.Find Business by Name")
+        print("2.Give Business Rating")
+        select = input('Choose your option or terminate this application by typing quit: ')
+        if select == "quit":
+            break
+        elif select is "1":
+            find_business()
+        elif select is "2":
+            print("Business Rating Function")
 
-    # function 1
-    function1(business_col)
 
-    # function 2
-    # function 3
-    # function 4
-    # function 5....
 
     # close connection
     client.close()
 
 
-def function1(business_col):
-    print(business_col.find_one())
+def find_business():
+    while True:
+        print("Find Business by Name")
+        print("1.Find business with full name")
+        print("2.Find business with partial name")
+        select = input('Choose your option or Go BACK by typing quit: ')
+
+        if select == "quit":
+            break
+        elif select is "1":
+            User_Functions.find_business_based_on_name()
+        elif select is "2":
+            print("Another User Function")
+            #Still need to implement this function
 
 
 def populate_data(client):
@@ -39,21 +53,32 @@ def populate_data(client):
         business_col = db['business']
         review_col = db['review']
         user_col = db['user']
+        tip_col = db['tip']
+        checkin_col = db['checkin']
 
         # import json data and insert to collection
         business = [json.loads(line) for line in open(
-            '../yelp_dataset/yelp_academic_dataset_business.json', 'r')]
+            '../small_yelp_dataset/business.json', 'r')]
         business_col.insert_many(business)
 
         review = [json.loads(line) for line in open(
-            '../yelp_dataset/yelp_academic_dataset_review.json', 'r')]
+            '../small_yelp_dataset/review.json', 'r')]
         review_col.insert_many(review)
 
         user = [json.loads(line) for line in open(
-            '../yelp_dataset/yelp_academic_dataset_user.json', 'r')]
+            '../small_yelp_dataset/user.json', 'r')]
         user_col.insert_many(user)
 
-        print("Done")
+        tip = [json.loads(line) for line in open(
+            '../small_yelp_dataset/tip.json', 'r')]
+        tip_col.insert_many(tip)
+
+        checkin = [json.loads(line) for line in open(
+            '../small_yelp_dataset/tip.json', 'r')]
+        checkin_col.insert_many(checkin)
+
+        print("Done populating the database")
+
 
 if __name__ == "__main__":
     main()
