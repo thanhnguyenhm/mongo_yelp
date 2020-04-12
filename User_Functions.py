@@ -100,6 +100,8 @@ def give_business_rating():
 
         business_rating = float(input('Please enter your rating for ' + business_object['name'] +
                                       ' or type "back" or "quit": '))
+        comment = input('Please enter your comments for ' + business_object['name'] +
+                        ' or type "back" or "quit": ')
         print()
         if business_rating == "quit":
             print("Goodbye!")
@@ -113,7 +115,7 @@ def give_business_rating():
                                 "business_id": business_object['business_id'],
                                 "stars": business_rating,
                                 "date": datetime.datetime.today(),
-                                "text": "Great place for Dessert",
+                                "text": comment,
                                 "useful": 0,
                                 "funny": 0,
                                 "cool": 0})
