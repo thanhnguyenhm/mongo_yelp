@@ -1,6 +1,7 @@
 import json
 import pymongo
 import User_Functions
+import sys
 
 
 def main():
@@ -11,16 +12,23 @@ def main():
     populate_data(client)
 
     while True:
-        print("Welcome to Business Details Application")
+        print("\n****************************************************")
+        print("***** Welcome to Business Details Application ******")
+        print("****************************************************\n")
         print("1.Find Business by Name")
         print("2.Give Business Rating")
+        print()
         select = input('Choose your option or terminate this application by typing quit: ')
+        print()
         if select == "quit":
+            print("Goodbye!")
             break
         elif select is "1":
             find_business()
         elif select is "2":
             print("Business Rating Function")
+        else:
+            print("Invalid option. Please choose again!")
 
 
 
@@ -30,18 +38,22 @@ def main():
 
 def find_business():
     while True:
-        print("Find Business by Name")
+        print("***** Find Business by Name *****")
         print("1.Find business with full name")
         print("2.Find business with partial name")
-        select = input('Choose your option or Go BACK by typing quit: ')
-
+        print()
+        select = input('Choose your option or type "back" or "quit": ')
         if select == "quit":
+            print("Goodbye!")
+            sys.exit()
+        elif select == "back":
             break
-        elif select is "1":
-            User_Functions.find_business_based_on_name()
         elif select is "2":
-            print("Another User Function")
-            #Still need to implement this function
+            User_Functions.find_business_based_on_name()
+        elif select is "1":
+            User_Functions.find_business_based_on_name_full()
+        else:
+            print("Invalid option. Please choose again!")
 
 
 def populate_data(client):
@@ -74,7 +86,7 @@ def populate_data(client):
         tip_col.insert_many(tip)
 
         checkin = [json.loads(line) for line in open(
-            '../small_yelp_dataset/tip.json', 'r')]
+            '../small_yelp_dataset/checkin.json', 'r')]
         checkin_col.insert_many(checkin)
 
         print("Done populating the database")
