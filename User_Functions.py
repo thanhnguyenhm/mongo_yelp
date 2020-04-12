@@ -67,7 +67,3 @@ def find_business_based_on_name_full():
         print('Average Ratings: ' + str(business_object['stars']) +
               ' Review Count: ' + str(business_object['review_count']))
         print('categories: ' + str(business_object['categories']))
-
-
-def function2():
-    print(business_col.find_one())
