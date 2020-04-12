@@ -49,7 +49,7 @@ def find_business():
         elif select == "back":
             break
         elif select is "2":
-            User_Functions.find_business_based_on_name()
+            User_Functions.find_business_based_on_name_partial()
         elif select is "1":
             User_Functions.find_business_based_on_name_full()
         else:
