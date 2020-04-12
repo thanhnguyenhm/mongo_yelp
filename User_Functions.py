@@ -1,6 +1,8 @@
 import pymongo
 import sys
-import re
+import app
+import utilities
+import datetime
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 
@@ -9,6 +11,7 @@ db = client["yelp_database"]
 business_col = db['business']
 review_col = db['review']
 user_col = db['user']
+
 
 def find_business_based_on_name_partial():
     """
@@ -66,3 +69,52 @@ def find_business_based_on_name_full():
         print('Average Ratings: ' + str(business_object['stars']) +
               ' Review Count: ' + str(business_object['review_count']))
         print('categories: ' + str(business_object['categories']))
+
+
+def give_business_rating():
+    """
+    Give a rating to the business
+    """
+    while(True):
+        print()
+        business_name = input(
+            'Please enter full business name to give Ratings or type "back" or "quit": ')
+        print()
+        if business_name == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if business_name == "back":
+            return
+
+        business_object = business_col.find_one({"name": business_name})
+        if business_object is None:
+            print("No business found with given name.")
+            continue
+        print('Business name: ' + business_object['name'])
+        print('Address: ' + business_object['address'])
+        print('City: ' + business_object['city'])
+        print('State: ' + business_object['state'])
+        print('categories: ' + str(business_object['categories']))
+
+        print()
+
+        business_rating = float(input('Please enter your rating for ' + business_object['name'] +
+                                      ' or type "back" or "quit": '))
+        print()
+        if business_rating == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if business_rating == "back":
+            return
+
+        print()
+        review_col.insert({ "review_id": utilities.random_rating_id(),
+                                "user_id": app.USER_ID,
+                                "business_id": business_object['business_id'],
+                                "stars": business_rating,
+                                "date": datetime.datetime.today(),
+                                "text": "Great place for Dessert",
+                                "useful": 0,
+                                "funny": 0,
+                                "cool": 0})
+        print('Thank you for providing your rating for ' + business_object['name'])
