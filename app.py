@@ -73,7 +73,7 @@ def give_delete_business_ratings():
         elif select is "1":
             User_Functions.give_business_rating()
         elif select is "2":
-            User_Functions.find_business_based_on_name_full()
+            User_Functions.delete_business_rating()
         else:
             print("Invalid option. Please choose again!")
 

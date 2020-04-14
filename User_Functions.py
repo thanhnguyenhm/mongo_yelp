@@ -120,3 +120,50 @@ def give_business_rating():
                                 "funny": 0,
                                 "cool": 0})
         print('Thank you for providing your rating for ' + business_object['name'])
+
+
+def delete_business_rating():
+    """
+    Delete rating to the business from userID
+    """
+    while(True):
+        print()
+        business_name = input(
+            'Please enter full business name to delete Ratings or type "back" or "quit": ')
+        print()
+        if business_name == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if business_name == "back":
+            return
+
+        business_object = business_col.find_one({"name": business_name})
+        if business_object is None:
+            print("No business found with given name.")
+            continue
+
+        # find review using business id and user id
+        business_id = business_object['business_id']
+        review_obj = review_col.find_one({"user_id": app.USER_ID})
+
+        
+        if review_obj:
+            print('This is your review for ' + business_object['name'] + ': ')
+            print('Stars: ' + str(review_obj['stars']))
+            print('Review: ' + review_obj['text'])
+
+            choice = input('\nDo you want to delete this review? Type "yes" to delete, type "back" to go back: ')
+            if choice == 'back':
+                return
+            elif choice == 'yes':
+                review_col.remove(review_obj)
+                print("\nYour review has been deleted!")
+            else:
+                print("Invalid choice")
+                return
+        else:
+            print("You have no review for " + business_object['name'] + "\n")
+            return
+
+
+        print()
