@@ -11,6 +11,7 @@ db = client["yelp_database"]
 business_col = db['business']
 review_col = db['review']
 user_col = db['user']
+checkin_col = db['checkin']
 
 
 def find_business_based_on_name_partial():
@@ -164,6 +165,49 @@ def delete_business_rating():
         else:
             print("You have no review for " + business_object['name'] + "\n")
             return
+        print()
 
+
+"""
+{
+    // string, 22 character business id, maps to business in business.json
+    "business_id": "tnhfDv5Il8EaGSXZGiuQGg"
+
+    // string which is a comma-separated list of timestamps for each checkin, each with format YYYY-MM-DD HH:MM:SS
+    "date": "2016-04-26 19:49:16, 2016-08-30 18:36:57, 2016-10-15 02:45:18, 2016-11-18 01:54:50, 2017-04-20 18:39:06, 2017-05-03 17:58:02"
+}"""
+def checkin(checkin_col=None):
+    while(True):
+        print()
+        business_name = input(
+            'Please enter full business name to check-in or type "back" or '
+            '"quit": ')
+        print()
+        if business_name == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if business_name == "back":
+            return
+
+        business_object = business_col.find({"name": business_name})
+        if business_object is None:
+            print("No business found with given name.")
+            continue
+        print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: '
+              f'{bus["postal code"]}' for bus in business_object)
+        postal_code_list = [i for i in business_object["postal code"]]
+        # input postal code to choose which business to check in
+        # same business_name can have multiple locations
+        postal_code = 0
+        while postal_code not in postal_code_list:
+            postal_code = input('Postal code or "back": ')
+            if postal_code == 'back':
+                return
+        store = business_col.find_one({"name": business_name, "postal "
+                                                                 "code": postal_code})
 
         print()
+        checkin_col.insert({"business_id": store['business_id'],
+                                "date": datetime.datetime.today()})
+        print(f'Thank you for checking in at {business_object["name"]}-{postal_code}')
+    print()
