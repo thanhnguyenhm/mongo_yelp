@@ -115,7 +115,7 @@ def give_business_rating():
                                 "user_id": app.USER_ID,
                                 "business_id": business_object['business_id'],
                                 "stars": business_rating,
-                                "date": datetime.datetime.today(),
+                                "date": datetime.datetime.now().strftime("%Y-%m-%d"),
                                 "text": comment,
                                 "useful": 0,
                                 "funny": 0,
@@ -168,6 +168,7 @@ def delete_business_rating():
         print()
 
 
+<<<<<<< HEAD
 """
 {
     // string, 22 character business id, maps to business in business.json
@@ -178,6 +179,8 @@ def delete_business_rating():
 }
 Note: You need to convert string with comma separated to Array to support this query
 """
+=======
+>>>>>>> bec923731dde0c41e02284288073c7bc3416a246
 def checkin():
     while(True):
         print()
@@ -198,7 +201,7 @@ def checkin():
         postal_code_list = []
         for bus in business_object:
             postal_code_list.append(bus['postal_code'])
-            print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: 'f'{bus["postal_code"]}')
+            print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: {bus["postal_code"]}')
 
         # input postal code to choose which business to check in
         # same business_name can have multiple locations
@@ -207,10 +210,16 @@ def checkin():
             postal_code = input('Postal code or "back": ')
             if postal_code == 'back':
                 return
+        date = datetime.datetime.now()
         store = business_col.find_one({"$text": {"$search": business_name}, "postal_code": postal_code})
-
         print()
+<<<<<<< HEAD
         checkin_col.update({"business_id": store['business_id']},
                            {"$push": {"date": datetime.datetime.today()}})
+=======
+        # Update required version of date time
+        checkin_col.insert({"business_id": store['business_id'], "date": date.strftime("%Y-%m-%d %H:%M:%S")})
+
+>>>>>>> bec923731dde0c41e02284288073c7bc3416a246
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
     print()
