@@ -168,15 +168,7 @@ def delete_business_rating():
         print()
 
 
-"""
-{
-    // string, 22 character business id, maps to business in business.json
-    "business_id": "tnhfDv5Il8EaGSXZGiuQGg"
-
-    // string which is a comma-separated list of timestamps for each checkin, each with format YYYY-MM-DD HH:MM:SS
-    "date": "2016-04-26 19:49:16, 2016-08-30 18:36:57, 2016-10-15 02:45:18, 2016-11-18 01:54:50, 2017-04-20 18:39:06, 2017-05-03 17:58:02"
-}"""
-def checkin(checkin_col=None):
+def checkin():
     while(True):
         print()
         business_name = input(
@@ -205,9 +197,10 @@ def checkin(checkin_col=None):
                 return
         store = business_col.find_one({"name": business_name, "postal "
                                                                  "code": postal_code})
-
+        date = datetime.datetime.now()
         print()
+        # Update required version of date time
         checkin_col.insert({"business_id": store['business_id'],
-                                "date": datetime.datetime.today()})
+                                "date": date.strftime("%Y-%m-%d %H:%M:%S")})
         print(f'Thank you for checking in at {business_object["name"]}-{postal_code}')
     print()
