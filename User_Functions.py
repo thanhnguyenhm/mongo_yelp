@@ -175,7 +175,8 @@ def delete_business_rating():
 
     // string which is a comma-separated list of timestamps for each checkin, each with format YYYY-MM-DD HH:MM:SS
     "date": "2016-04-26 19:49:16, 2016-08-30 18:36:57, 2016-10-15 02:45:18, 2016-11-18 01:54:50, 2017-04-20 18:39:06, 2017-05-03 17:58:02"
-}"""
+Note: You need to convert string with comma separated to Array to support this query
+"""
 def checkin():
     while(True):
         print()
@@ -208,7 +209,11 @@ def checkin():
         store = business_col.find_one({"$text": {"$search": business_name}, "postal_code": postal_code})
 
         print()
-        checkin_col.insert({"business_id": store['business_id'],
-                                "date": datetime.datetime.today()})
+        date = datetime.datetime.now()
+
+        checkin_col.update({"business_id": store['business_id']},
+                           {"$push": {"date": date.strftime("%Y-%m-%d %H:%M:%S")}})
+
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
     print()
+
