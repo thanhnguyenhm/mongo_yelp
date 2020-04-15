@@ -21,6 +21,7 @@ def main():
         print("****************************************************\n")
         print("1.Find Business by Name")
         print("2.Give/Delete Business Rating")
+        print("3.Business Checkin")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
         print()
@@ -31,6 +32,8 @@ def main():
             find_business()
         elif select is "2":
             give_delete_business_ratings()
+        elif select is "3":
+            business_checkin()
         else:
             print("Invalid option. Please choose again!")
 
@@ -76,6 +79,10 @@ def give_delete_business_ratings():
             User_Functions.delete_business_rating()
         else:
             print("Invalid option. Please choose again!")
+
+
+def business_checkin():
+    User_Functions.checkin()
 
 
 def populate_data(client):

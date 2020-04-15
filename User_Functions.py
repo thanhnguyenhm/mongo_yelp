@@ -176,7 +176,7 @@ def delete_business_rating():
     // string which is a comma-separated list of timestamps for each checkin, each with format YYYY-MM-DD HH:MM:SS
     "date": "2016-04-26 19:49:16, 2016-08-30 18:36:57, 2016-10-15 02:45:18, 2016-11-18 01:54:50, 2017-04-20 18:39:06, 2017-05-03 17:58:02"
 }"""
-def checkin(checkin_col=None):
+def checkin():
     while(True):
         print()
         business_name = input(
@@ -189,13 +189,15 @@ def checkin(checkin_col=None):
         if business_name == "back":
             return
 
-        business_object = business_col.find({"name": business_name})
+        business_object = business_col.find({"$text": {"$search": business_name}}).limit(10)
         if business_object is None:
             print("No business found with given name.")
             continue
-        print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: '
-              f'{bus["postal code"]}' for bus in business_object)
-        postal_code_list = [i for i in business_object["postal code"]]
+        postal_code_list = []
+        for bus in business_object:
+            postal_code_list.append(bus['postal_code'])
+            print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: 'f'{bus["postal_code"]}')
+
         # input postal code to choose which business to check in
         # same business_name can have multiple locations
         postal_code = 0
@@ -203,11 +205,10 @@ def checkin(checkin_col=None):
             postal_code = input('Postal code or "back": ')
             if postal_code == 'back':
                 return
-        store = business_col.find_one({"name": business_name, "postal "
-                                                                 "code": postal_code})
+        store = business_col.find_one({"$text": {"$search": business_name}, "postal_code": postal_code})
 
         print()
         checkin_col.insert({"business_id": store['business_id'],
                                 "date": datetime.datetime.today()})
-        print(f'Thank you for checking in at {business_object["name"]}-{postal_code}')
+        print(f'Thank you for checking in at {store["name"]}-{postal_code}')
     print()
