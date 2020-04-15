@@ -115,7 +115,7 @@ def give_business_rating():
                                 "user_id": app.USER_ID,
                                 "business_id": business_object['business_id'],
                                 "stars": business_rating,
-                                "date": datetime.datetime.today(),
+                                "date": datetime.datetime.now().strftime("%Y-%m-%d"),
                                 "text": comment,
                                 "useful": 0,
                                 "funny": 0,
@@ -181,13 +181,15 @@ def checkin():
         if business_name == "back":
             return
 
-        business_object = business_col.find({"name": business_name})
+        business_object = business_col.find({"$text": {"$search": business_name}}).limit(10)
         if business_object is None:
             print("No business found with given name.")
             continue
-        print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: '
-              f'{bus["postal code"]}' for bus in business_object)
-        postal_code_list = [i for i in business_object["postal code"]]
+        postal_code_list = []
+        for bus in business_object:
+            postal_code_list.append(bus['postal_code'])
+            print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: {bus["postal_code"]}')
+
         # input postal code to choose which business to check in
         # same business_name can have multiple locations
         postal_code = 0
@@ -195,12 +197,12 @@ def checkin():
             postal_code = input('Postal code or "back": ')
             if postal_code == 'back':
                 return
-        store = business_col.find_one({"name": business_name, "postal "
-                                                                 "code": postal_code})
         date = datetime.datetime.now()
+        store = business_col.find_one({"$text": {"$search": business_name}, "postal_code": postal_code})
         print()
         # Update required version of date time
-        checkin_col.insert({"business_id": store['business_id'],
-                                "date": date.strftime("%Y-%m-%d %H:%M:%S")})
-        print(f'Thank you for checking in at {business_object["name"]}-{postal_code}')
+        checkin_col.insert({"business_id": store['business_id'], "date": date.strftime("%Y-%m-%d %H:%M:%S")})
+
+        print(f'Thank you for checking in at {store["name"]}-{postal_code}')
+
     print()
