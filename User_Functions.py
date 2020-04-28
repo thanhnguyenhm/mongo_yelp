@@ -17,6 +17,7 @@ checkin_col = db['checkin']
 def find_business_based_on_name_partial():
     """
     Find business based on partial name
+    Use Case 1  
     """
     while (True):
         print()
@@ -29,7 +30,8 @@ def find_business_based_on_name_partial():
         if business_name == "back":
             return
 
-        business_objects = business_col.find({"$text": {"$search": business_name}}).limit(10)
+        business_objects = business_col.find(
+            {"$text": {"$search": business_name}}).limit(10)
         if business_objects is None:
             print("No business found with given name.")
             continue
@@ -48,6 +50,7 @@ def find_business_based_on_name_partial():
 def find_business_based_on_name_full():
     """
     Find business based on full name
+    Use Case 1
     """
     while (True):
         print()
@@ -73,9 +76,47 @@ def find_business_based_on_name_full():
         print('categories: ' + str(business_object['categories']))
 
 
+def browse_state_city():
+    """
+    Find businesses based on State and Ciy
+    Use Case 3
+    """
+    print("***** Find Businesses by State and City *****")
+    while (True):
+        print()
+        state = input(
+            'Please enter a state abbreviation or type "back" or "quit": ')
+        print()
+        if state == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if state == "back":
+            return
+        city = input('Please enter a city name: ')
+
+        cursor = business_col.find(
+            {"state": state, "city": city})
+
+        business_objects = cursor.limit(10)
+        if cursor.count() == 0:
+            print("No business found with given state and city.")
+            continue
+
+        for business_object in business_objects:
+            print('Business name: ' + business_object['name'])
+            print('Address: ' + business_object['address'])
+            print('City: ' + business_object['city'])
+            print('State: ' + business_object['state'])
+            print('Average Rating: ' + str(business_object['stars']) + ' Review Count: ' + str(
+                business_object['review_count']))
+            print('categories: ' + str(business_object['categories']))
+            print('#############################')
+
+
 def give_business_rating():
     """
     Give a rating to the business
+    Use Case 11
     """
     while (True):
         print()
@@ -121,12 +162,14 @@ def give_business_rating():
                            "useful": 0,
                            "funny": 0,
                            "cool": 0})
-        print('Thank you for providing your rating for ' + business_object['name'])
+        print('Thank you for providing your rating for ' +
+              business_object['name'])
 
 
 def delete_business_rating():
     """
     Delete rating to the business from userID
+    Use Case 16
     """
     while (True):
         print()
@@ -153,7 +196,8 @@ def delete_business_rating():
             print('Stars: ' + str(review_obj['stars']))
             print('Review: ' + review_obj['text'])
 
-            choice = input('\nDo you want to delete this review? Type "yes" to delete, type "back" to go back: ')
+            choice = input(
+                '\nDo you want to delete this review? Type "yes" to delete, type "back" to go back: ')
             if choice == 'back':
                 return
             elif choice == 'yes':
@@ -181,6 +225,10 @@ Note: You need to convert string with comma separated to Array to support this q
 
 
 def checkin():
+    """
+    Allow users to check-in at the business
+    Use Case 13
+    """
     while (True):
         print()
         business_name = input(
@@ -193,14 +241,16 @@ def checkin():
         if business_name == "back":
             return
 
-        business_object = business_col.find({"$text": {"$search": business_name}}).limit(10)
+        business_object = business_col.find(
+            {"$text": {"$search": business_name}}).limit(10)
         if business_object is None:
             print("No business found with given name.")
             continue
         postal_code_list = []
         for bus in business_object:
             postal_code_list.append(bus['postal_code'])
-            print(f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: 'f'{bus["postal_code"]}')
+            print(
+                f'Business name: {bus["name"]}, City: {bus["city"]}, Postal Code: 'f'{bus["postal_code"]}')
 
         # input postal code to choose which business to check in
         # same business_name can have multiple locations
@@ -209,7 +259,8 @@ def checkin():
             postal_code = input('Postal code or "back": ')
             if postal_code == 'back':
                 return
-        store = business_col.find_one({"$text": {"$search": business_name}, "postal_code": postal_code})
+        store = business_col.find_one(
+            {"$text": {"$search": business_name}, "postal_code": postal_code})
 
         print()
         date = datetime.datetime.now()
