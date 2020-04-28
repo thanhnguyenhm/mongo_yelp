@@ -1,2 +1,4 @@
 yelp_dataset/
 __pycache__/
+.idea/
+venv/
