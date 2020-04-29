@@ -3,6 +3,7 @@ import sys
 import app
 import utilities
 import datetime
+import re
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 
@@ -74,6 +75,45 @@ def find_business_based_on_name_full():
         print('Average Ratings: ' + str(business_object['stars']) +
               ' Review Count: ' + str(business_object['review_count']))
         print('categories: ' + str(business_object['categories']))
+
+def browse_categories():
+    """
+    Find businesses based on categories
+    Use Case 4
+    """
+    print("***** Find Businesses by categories *****")
+    while (True):
+        print()
+        category = input(
+            'Please enter a type of business (category) or type "back" or "quit": ')
+        print()
+        if category == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if category == "back":
+            return
+
+        # create a regex pattern for business name
+        pattern = r".*" + re.escape(category) + r".*"
+        regx = re.compile(pattern, re.IGNORECASE)
+
+        cursor = business_col.find(
+            {"categories": regx})
+
+        business_objects = cursor.limit(10)
+        if cursor.count() == 0:
+            print("No businesses found with given category.")
+            continue
+
+        for business_object in business_objects:
+            print('Business name: ' + business_object['name'])
+            print('Address: ' + business_object['address'])
+            print('City: ' + business_object['city'])
+            print('State: ' + business_object['state'])
+            print('Average Rating: ' + str(business_object['stars']) + ' Review Count: ' + str(
+                business_object['review_count']))
+            print('categories: ' + str(business_object['categories']))
+            print('#############################')
 
 
 def browse_state_city():

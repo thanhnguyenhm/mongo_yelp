@@ -23,6 +23,7 @@ def main():
         print("2.Give/Delete Business Rating")
         print("3.Business Checkin")
         print("4.Find businesses by State and City")
+        print("5.Find businesses by categories")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
         print()
@@ -37,6 +38,8 @@ def main():
             business_checkin()
         elif select is "4":
             User_Functions.browse_state_city()
+        elif select is "5":
+            User_Functions.browse_categories()
         else:
             print("Invalid option. Please choose again!")
 
