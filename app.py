@@ -22,24 +22,36 @@ def main():
         print("1.Find Business by Name")
         print("2.Give/Delete Business Rating")
         print("3.Business Checkin")
-        print("4.Find businesses by State and City")
-        print("5.Find businesses by categories")
+        print("4.Find Businesses by State and City")
+        print("5.Find Businesses by Categories")
+        print("9.Check if Business is Open or Closed")
+        print("10.Find Average Star, Rating Count")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
         print()
         if select == "quit":
             print("Goodbye!")
             break
-        elif select is "1":
+        elif select == "1":
             find_business()
-        elif select is "2":
+        elif select == "2":
             give_delete_business_ratings()
-        elif select is "3":
+        elif select == "3":
             business_checkin()
-        elif select is "4":
+        elif select == "4":
             User_Functions.browse_state_city()
-        elif select is "5":
+        elif select == "5":
             User_Functions.browse_categories()
+        elif select == "6":
+            pass 
+        elif select == "7":
+            pass 
+        elif select == "8":
+            pass 
+        elif select == "9":
+            User_Functions.check_open() 
+        elif select == "10":
+            User_Functions.find_rating()
         else:
             print("Invalid option. Please choose again!")
 
