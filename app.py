@@ -24,6 +24,8 @@ def main():
         print("3.Business Checkin")
         print("4.Find Businesses by State and City")
         print("5.Find Businesses by Categories")
+        print("6.Check Business's open hours")
+        print("8.Check Business's address")
         print("9.Check if Business is Open or Closed")
         print("10.Find Average Star, Rating Count")
         print()
@@ -43,11 +45,11 @@ def main():
         elif select == "5":
             User_Functions.browse_categories()
         elif select == "6":
-            pass 
+            User_Functions.check_hours()
         elif select == "7":
             pass 
         elif select == "8":
-            pass 
+            User_Functions.find_address()
         elif select == "9":
             User_Functions.check_open() 
         elif select == "10":

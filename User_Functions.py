@@ -15,10 +15,26 @@ user_col = db['user']
 checkin_col = db['checkin']
 
 
+def find_business_based_on_name_full():
+    """
+    Find business based on full name
+    Use Case 1
+    """
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        print_business(business_object)
+
+
 def find_business_based_on_name_partial():
     """
     Find business based on partial name
-    Use Case 1  
+    Use Case 2
     """
     while (True):
         print()
@@ -35,54 +51,6 @@ def find_business_based_on_name_partial():
             {"$text": {"$search": business_name}}).limit(10)
         if business_objects is None:
             print("No business found with given name.")
-            continue
-
-        for business_object in business_objects:
-            print_business(business_object)
-
-
-def find_business_based_on_name_full():
-    """
-    Find business based on full name
-    Use Case 1
-    """
-    while (True):
-        print()
-        business_object = query_business_name()
-        if business_object == "back":
-            return
-        elif business_object is None:
-            continue
-
-        print_business(business_object)
-
-def browse_categories():
-    """
-    Find businesses based on categories
-    Use Case 4
-    """
-    print("***** Find Businesses by Categories *****")
-    while (True):
-        print()
-        category = input(
-            'Please enter a type of business (category) or type "back" or "quit": ')
-        print()
-        if category == "quit":
-            print("Goodbye!")
-            sys.exit()
-        if category == "back":
-            return
-
-        # create a regex pattern for business name
-        pattern = r".*" + re.escape(category) + r".*"
-        regx = re.compile(pattern, re.IGNORECASE)
-
-        cursor = business_col.find(
-            {"categories": regx})
-
-        business_objects = cursor.limit(10)
-        if cursor.count() == 0:
-            print("No businesses found with given category.")
             continue
 
         for business_object in business_objects:
@@ -117,6 +85,117 @@ def browse_state_city():
 
         for business_object in business_objects:
             print_business(business_object)
+
+
+def browse_categories():
+    """
+    Find businesses based on categories
+    Use Case 4
+    """
+    print("***** Find Businesses by Categories *****")
+    while (True):
+        print()
+        category = input(
+            'Please enter a type of business (category) or type "back" or "quit": ')
+        print()
+        if category == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if category == "back":
+            return
+
+        # create a regex pattern for business name
+        pattern = r".*" + re.escape(category) + r".*"
+        regx = re.compile(pattern, re.IGNORECASE)
+
+        cursor = business_col.find(
+            {"categories": regx})
+
+        business_objects = cursor.limit(10)
+        if cursor.count() == 0:
+            print("No businesses found with given category.")
+            continue
+
+        for business_object in business_objects:
+            print_business(business_object)
+
+
+def check_hours():
+    """
+    Allow users to check open hours of given business
+    User case 6
+    """
+    while True:
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        print(f"{business_object['name']} hours are: "
+              f"{business_object['hours']}")
+
+
+def find_address():
+    """
+    Allow users to check address of given business
+    User case 8
+    """
+    while True:
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        print(f'{business_object["name"]}\'s address is:'
+              f'{business_object["address"]}, {business_object["city"]} '
+              f'{business_object["state"]}')
+
+
+def check_open():
+    """
+    Check if a business is open
+    Use Case 9
+    """
+    print("***** Check if Business is Open/Closed *****")
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        if business_object['is_open'] == 1:
+            print("This business is open!")
+        else:
+            print("This business is closed!")
+
+        print()
+
+        print_business(business_object)
+
+
+def find_rating():
+    """
+    Find average star and total rating counts
+    Use Case 10
+    """
+    print("***** Finding Star/Rating *****")
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        print("This business is rated " + str(
+            business_object['stars']) + " stars with " + str(
+            business_object['review_count']) + " reviews.\n")
+
+        print_business(business_object)
 
 
 def give_business_rating():
@@ -159,59 +238,6 @@ def give_business_rating():
                            "cool": 0})
         print('Thank you for providing your rating for ' +
               business_object['name'])
-
-
-def delete_business_rating():
-    """
-    Delete rating to the business from userID
-    Use Case 16
-    """
-    print("***** Deleting Rating *****")
-    while (True):
-        print()
-        business_object = query_business_name()
-        if business_object == "back":
-            return
-        elif business_object is None:
-            continue
-
-        print("Please wait...")
-
-        # find review using business id and user id
-        business_id = business_object['business_id']
-        review_obj = review_col.find_one({"user_id": app.USER_ID})
-        
-        if review_obj:
-            print('This is your review for ' + business_object['name'] + ': ')
-            print('Stars: ' + str(review_obj['stars']))
-            print('Review: ' + review_obj['text'])
-
-            choice = input(
-                '\nDo you want to delete this review? Type "yes" to delete, type "back" to go back: ')
-            if choice == 'back':
-                return
-            elif choice == 'yes':
-                review_col.remove(review_obj)
-                print("\nYour review has been deleted!")
-            else:
-                print("Invalid choice")
-                return
-        else:
-            print("You have no review for " + business_object['name'] + "\n")
-            return
-        print()
-
-
-"""
-{
-    // string, 22 character business id, maps to business in business.json
-    "business_id": "tnhfDv5Il8EaGSXZGiuQGg"
-
-    // string which is a comma-separated list of timestamps for each checkin, each with format YYYY-MM-DD HH:MM:SS
-    "date": "2016-04-26 19:49:16, 2016-08-30 18:36:57, 2016-10-15 02:45:18, 2016-11-18 01:54:50, 2017-04-20 18:39:06, 2017-05-03 17:58:02"
-}
-Note: You need to convert string with comma separated to Array to support this query
-"""
 
 
 def checkin():
@@ -258,15 +284,14 @@ def checkin():
         checkin_col.update({"business_id": store['business_id']},
                            {"$push": {"date": date.strftime("%Y-%m-%d %H:%M:%S")}})
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
-    print()
 
 
-def check_open():
+def delete_business_rating():
     """
-    Check if a business is open
-    Use Case 9
+    Delete rating to the business from userID
+    Use Case 16
     """
-    print("***** Check if Business is Open/Closed *****")
+    print("***** Deleting Rating *****")
     while (True):
         print()
         business_object = query_business_name()
@@ -275,33 +300,32 @@ def check_open():
         elif business_object is None:
             continue
 
-        if business_object['is_open'] == 1:
-            print("This business is open!")
-        else:
-            print("This business is closed!")
+        print("Please wait...")
+
+        # find review using business id and user id
+        business_id = business_object['business_id']
+        review_obj = review_col.find_one({"user_id": app.USER_ID})
         
-        print()
+        if review_obj:
+            print('This is your review for ' + business_object['name'] + ': ')
+            print('Stars: ' + str(review_obj['stars']))
+            print('Review: ' + review_obj['text'])
 
-        print_business(business_object)
-
-
-def find_rating():
-    """
-    Find average star and total rating counts
-    Use Case 10
-    """
-    print("***** Finding Star/Rating *****")
-    while (True):
-        print()
-        business_object = query_business_name()
-        if business_object == "back":
+            choice = input(
+                '\nDo you want to delete this review? Type "yes" to delete, type "back" to go back: ')
+            if choice == 'back':
+                return
+            elif choice == 'yes':
+                review_col.remove(review_obj)
+                print("\nYour review has been deleted!")
+            else:
+                print("Invalid choice")
+                return
+        else:
+            print("You have no review for " + business_object['name'] + "\n")
             return
-        elif business_object is None:
-            continue
+        print()
 
-        print("This business is rated " + str(business_object['stars']) + " stars with " + str(business_object['review_count']) + " reviews.\n")
-
-        print_business(business_object)
 
 def print_business(business_object):
     """
@@ -317,9 +341,8 @@ def print_business(business_object):
     # print('categories: ' + str(business_object['categories']))
 
     print(business_object['name'])
-    print('Address: ' +
-          business_object['address'] + ', ' + business_object['city'] + ', ' + business_object['state'])
-
+    print(f'Address: {business_object["address"]}, '
+          f'{business_object["city"]}, {business_object["state"]}')
     print('#############################')
 
 
@@ -343,3 +366,5 @@ def query_business_name():
         print("No business found with given name.")
 
     return business_object
+
+
