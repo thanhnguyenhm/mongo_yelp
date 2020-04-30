@@ -21,7 +21,7 @@ def find_business_based_on_name_full():
     Find business based on full name
     Use Case 1
     """
-    while (True):
+    while True:
         print()
         business_object = query_business_name()
         if business_object == "back":
@@ -37,7 +37,7 @@ def find_business_based_on_name_partial():
     Find business based on partial name
     Use Case 2
     """
-    while (True):
+    while True:
         print()
         business_name = input(
             'Please enter partial business name or type "back" or "quit": ')
@@ -64,7 +64,7 @@ def browse_state_city():
     Use Case 3
     """
     print("***** Find Businesses by State and City *****")
-    while (True):
+    while True:
         print()
         state = input(
             'Please enter a state abbreviation or type "back" or "quit": ')
@@ -94,7 +94,7 @@ def browse_categories(amount=1):
     Use Case 4
     """
     print("***** Find Businesses by Categories *****")
-    while (True):
+    while True:
         print()
         category = input(
             'Please enter a type of business (category) or type "back" or "quit": ')
@@ -109,7 +109,7 @@ def browse_categories(amount=1):
         pattern = r".*" + re.escape(category) + r".*"
         regx = re.compile(pattern, re.IGNORECASE)
 
-        cursor = business_col.find({"categories": regx}).sort({"amount":
+        cursor = business_col.find({"categories": regx}).sort({"stars":
                                                                 amount})
 
         business_objects = cursor.limit(10)
@@ -189,7 +189,7 @@ def check_open():
     Use Case 9
     """
     print("***** Check if Business is Open/Closed *****")
-    while (True):
+    while True:
         print()
         business_object = query_business_name()
         if business_object == "back":
@@ -278,7 +278,7 @@ def checkin():
     Use Case 13
     """
     print("***** Checking In *****")
-    while (True):
+    while True:
         print()
         business_name = input(
             'Please enter partial business name to check-in or type "back" or '
@@ -325,7 +325,7 @@ def delete_business_rating():
     Use Case 16
     """
     print("***** Deleting Rating *****")
-    while (True):
+    while True:
         print()
         business_object = query_business_name()
         if business_object == "back":
