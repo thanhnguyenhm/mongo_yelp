@@ -88,7 +88,7 @@ def browse_state_city():
             print_business(business_object)
 
 
-def browse_categories():
+def browse_categories(amount=1):
     """
     Find businesses based on categories
     Use Case 4
@@ -109,16 +109,27 @@ def browse_categories():
         pattern = r".*" + re.escape(category) + r".*"
         regx = re.compile(pattern, re.IGNORECASE)
 
-        cursor = business_col.find(
-            {"categories": regx})
+        cursor = business_col.find({"categories": regx}).sort({"amount":
+                                                                amount})
 
         business_objects = cursor.limit(10)
         if cursor.count() == 0:
             print("No businesses found with given category.")
             continue
-
         for business_object in business_objects:
             print_business(business_object)
+        return business_objects
+
+
+def sort_by_ratings():
+    """
+    Sort businesses based on ratings descending when searching by category
+    User case 5
+    """
+    while True:
+        business_object = browse_categories(-1)
+        if business_object is None:
+            continue
 
 
 def check_hours():
@@ -235,9 +246,11 @@ def give_business_rating():
 
         print()
 
-        business_rating = float(input('Please enter your rating for ' + business_object['name'] + ": "))
-        comment = input('Please enter your comments for ' + business_object['name'] +
-                        ' or type "back" or "quit": ')
+        business_rating = float(input(
+            'Please enter your rating for ' + business_object['name'] + ": "))
+        comment = input(
+            'Please enter your comments for ' + business_object['name'] +
+            ' or type "back" or "quit": ')
         print()
         if comment == "quit":
             print("Goodbye!")
@@ -301,7 +314,8 @@ def checkin():
         print()
         date = datetime.datetime.now()
         checkin_col.update({"business_id": store['business_id']},
-                           {"$push": {"date": date.strftime("%Y-%m-%d %H:%M:%S")}})
+                           {"$push": {
+                               "date": date.strftime("%Y-%m-%d %H:%M:%S")}})
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
 
 
@@ -324,7 +338,7 @@ def delete_business_rating():
         # find review using business id and user id
         business_id = business_object['business_id']
         review_obj = review_col.find_one({"user_id": app.USER_ID})
-        
+
         if review_obj:
             print('This is your review for ' + business_object['name'] + ': ')
             print('Stars: ' + str(review_obj['stars']))
@@ -385,5 +399,3 @@ def query_business_name():
         print("No business found with given name.")
 
     return business_object
-
-

@@ -21,14 +21,15 @@ def main():
         print("****************************************************\n")
         print("1.Find Business by Name")
         print("2.Give/Delete Business Rating")
-        print("3.Business Checkin")
-        print("4.Find Businesses by State and City")
-        print("5.Find Businesses by Categories")
+        print("3.Find Businesses by State and City")
+        print("4.Find Businesses by Categories")
+        print("5.Sort Businesses by Categories and Ratings")
         print("6.Check Business's open hours")
         print("7.Find Business's tips")
         print("8.Check Business's address")
         print("9.Check if Business is Open or Closed")
         print("10.Find Average Star, Rating Count")
+        print("13.Business Checkin")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
         print()
@@ -40,11 +41,11 @@ def main():
         elif select == "2":
             give_delete_business_ratings()
         elif select == "3":
-            business_checkin()
-        elif select == "4":
             User_Functions.browse_state_city()
-        elif select == "5":
+        elif select == "4":
             User_Functions.browse_categories()
+        elif select == "5":
+            User_Functions.sort_by_ratings()
         elif select == "6":
             User_Functions.check_hours()
         elif select == "7":
@@ -55,6 +56,8 @@ def main():
             User_Functions.check_open() 
         elif select == "10":
             User_Functions.find_rating()
+        elif select == "13":
+            business_checkin()
         else:
             print("Invalid option. Please choose again!")
 
