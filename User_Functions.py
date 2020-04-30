@@ -93,7 +93,10 @@ def browse_categories(amount=1):
     Find businesses based on categories
     Use Case 4
     """
-    print("***** Find Businesses by Categories *****")
+    if amount == 1:
+        print("***** Find Businesses by Categories *****")
+    else:
+        print("***** Find Businesses by Categories Sorted by Rate *****")
     while True:
         print()
         category = input(
@@ -109,16 +112,15 @@ def browse_categories(amount=1):
         pattern = r".*" + re.escape(category) + r".*"
         regx = re.compile(pattern, re.IGNORECASE)
 
-        cursor = business_col.find({"categories": regx}).sort({"stars":
-                                                                amount})
+        cursor = business_col.find({"categories": regx})
 
-        business_objects = cursor.limit(10)
+        business_objects = cursor.limit(10).sort("stars", amount)
+        
         if cursor.count() == 0:
             print("No businesses found with given category.")
             continue
         for business_object in business_objects:
             print_business(business_object)
-        return business_objects
 
 
 def sort_by_ratings():
@@ -128,8 +130,6 @@ def sort_by_ratings():
     """
     while True:
         business_object = browse_categories(-1)
-        if business_object is None:
-            continue
 
 
 def check_hours():
