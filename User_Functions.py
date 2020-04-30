@@ -13,6 +13,7 @@ business_col = db['business']
 review_col = db['review']
 user_col = db['user']
 checkin_col = db['checkin']
+tip_col = db['tip']
 
 
 def find_business_based_on_name_full():
@@ -134,6 +135,24 @@ def check_hours():
 
         print(f"{business_object['name']} hours are: "
               f"{business_object['hours']}")
+
+
+def find_tips():
+    """
+    Allow users to see tips of given business
+    User case 7
+    """
+    while True:
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+        id = business_object['business_id']
+        tip_object = tip_col.find({"business_id": id}).limit(10)
+        print(f"{business_object['name']} tips are: ")
+        for tip in tip_object:
+            print(tip["text"])
 
 
 def find_address():
