@@ -88,15 +88,12 @@ def browse_state_city():
             print_business(business_object)
 
 
-def browse_categories(amount=1):
+def browse_categories():
     """
     Find businesses based on categories
     Use Case 4
     """
-    if amount == 1:
-        print("***** Find Businesses by Categories *****")
-    else:
-        print("***** Find Businesses by Categories Sorted by Rate *****")
+    print("***** Find Businesses by Categories *****")
     while True:
         print()
         category = input(
@@ -114,7 +111,7 @@ def browse_categories(amount=1):
 
         cursor = business_col.find({"categories": regx})
 
-        business_objects = cursor.limit(10).sort("stars", amount)
+        business_objects = cursor.limit(10)
         
         if cursor.count() == 0:
             print("No businesses found with given category.")
@@ -128,8 +125,33 @@ def sort_by_ratings():
     Sort businesses based on ratings descending when searching by category
     User case 5
     """
+
+    print("***** Find Businesses by Categories Sorted by Rate *****")
     while True:
-        business_object = browse_categories(-1)
+        print()
+        category = input(
+            'Please enter a type of business (category) or type "back" or "quit": ')
+        print()
+        if category == "quit":
+            print("Goodbye!")
+            sys.exit()
+        if category == "back":
+            return
+
+        # create a regex pattern for business name
+        pattern = r".*" + re.escape(category) + r".*"
+        regx = re.compile(pattern, re.IGNORECASE)
+
+        cursor = business_col.find({"categories": regx})
+
+        business_objects = cursor.limit(10).sort("stars", -1)
+
+        if cursor.count() == 0:
+            print("No businesses found with given category.")
+            continue
+        for business_object in business_objects:
+            print(f'Stars: {business_object["stars"]}')
+            print_business(business_object)
 
 
 def check_hours():
@@ -317,6 +339,32 @@ def checkin():
                            {"$push": {
                                "date": date.strftime("%Y-%m-%d %H:%M:%S")}})
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
+
+
+def find_reviews():
+    """
+    See all reviews of a business
+    Use Case 15
+    """
+    print("***** Find Reviews of a Business *****")
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+        id = business_object['business_id']
+        review_object = review_col.find({"business_id": id}).limit(10)
+        print(f'{business_object["name"]} has'
+              f' {business_object["review_count"]} '
+              f'reviews:')
+        for review in review_object:
+            userid = review['user_id']
+            username = user_col.find({"user_id": userid})
+            print(f'- {username} ({review["stars"]}):'
+                  f' {review["text"]}.'
+                  f' {review["date"]}')
 
 
 def delete_business_rating():
