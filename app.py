@@ -29,6 +29,7 @@ def main():
         print("8.Check Business's address")
         print("9.Check if Business is Open or Closed")
         print("10.Find Average Star, Rating Count")
+        print("12.Filter Specific Rating Reviews")
         print("13.Business Checkin")
         print("14.Find Number of Check-ins")
         print("15.Find Reviews of Business")
@@ -58,6 +59,8 @@ def main():
             User_Functions.check_open() 
         elif select == "10":
             User_Functions.find_rating()
+        elif select == "12":
+            User_Functions.filter_reviews()
         elif select == "13":
             User_Functions.checkin()
         elif select == "14":

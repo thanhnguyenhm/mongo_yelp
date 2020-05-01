@@ -294,6 +294,33 @@ def give_business_rating():
               business_object['name'])
 
 
+def filter_reviews():
+    """
+    Filter rating reviews of a business
+    Use Case 12
+    """
+    print("***** Filter Specific Rating Reviews of a Business *****")
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+        id = business_object['business_id']
+        rating = float(input(
+            f'Please enter the number 1-5 to see reviews of {business_object["name"]}: '))
+        review_object = review_col.find({"business_id": id,
+                                         "stars": rating}).limit(10)
+        print()
+        for review in review_object:
+            userid = review['user_id']
+            username = user_col.find({"user_id": userid})
+            print(f'- {username} ({review["stars"]}):'
+                  f' {review["text"]}.'
+                  f' {review["date"]}')
+
+
 def checkin():
     """
     Allow users to check-in at the business
