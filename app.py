@@ -30,6 +30,7 @@ def main():
         print("9.Check if Business is Open or Closed")
         print("10.Find Average Star, Rating Count")
         print("13.Business Checkin")
+        print("14.Find Number of Check-ins")
         print("15.Find Reviews of Business")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
@@ -59,6 +60,8 @@ def main():
             User_Functions.find_rating()
         elif select == "13":
             User_Functions.checkin()
+        elif select == "14":
+            User_Functions.count_checkin()
         elif select == "15":
             User_Functions.find_reviews()
         else:

@@ -340,6 +340,28 @@ def checkin():
                                "date": date.strftime("%Y-%m-%d %H:%M:%S")}})
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
 
+def count_checkin():
+    """
+    Count how many people have checked in at a business
+    Use case 14
+    """
+    print("***** Find Number of Checkins *****")
+    while (True):
+        print()
+        business_object = query_business_name()
+        if business_object == "back":
+            return
+        elif business_object is None:
+            continue
+
+        id = business_object['business_id']
+        checkin_object = checkin_col.find({"business_id": id})
+
+        for checkin in checkin_object:
+            num = len(checkin['date'].split(","))
+        
+        print(f'This business has {num} check-ins.')
+
 
 def find_reviews():
     """
