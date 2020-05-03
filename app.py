@@ -13,7 +13,7 @@ def main():
     client = pymongo.MongoClient("mongodb://localhost:27017/")
 
     # populate database if not exists
-    populate_data(client)\
+    populate_data(client)
 
     while True:
         print("\n****************************************************")
@@ -29,10 +29,10 @@ def main():
         print("8.Check Business's address")
         print("9.Check if Business is Open or Closed")
         print("10.Find Average Star, Rating Count")
-        print("12.Filter Specific Rating Reviews")
-        print("13.Business Checkin")
-        print("14.Find Number of Check-ins")
-        print("15.Find Reviews of Business")
+        print("11.Filter Specific Rating Reviews")
+        print("12.Business Checkin")
+        print("13.Find Number of Check-ins")
+        print("14.Find Reviews of Business")
         print()
         select = input('Choose your option or terminate this application by typing quit: ')
         print()
@@ -59,13 +59,13 @@ def main():
             User_Functions.check_open() 
         elif select == "10":
             User_Functions.find_rating()
-        elif select == "12":
+        elif select == "11":
             User_Functions.filter_reviews()
-        elif select == "13":
+        elif select == "12":
             User_Functions.checkin()
-        elif select == "14":
+        elif select == "13":
             User_Functions.count_checkin()
-        elif select == "15":
+        elif select == "14":
             User_Functions.find_reviews()
         else:
             print("Invalid option. Please choose again!")

@@ -315,8 +315,8 @@ def filter_reviews():
         print()
         for review in review_object:
             userid = review['user_id']
-            username = user_col.find({"user_id": userid})
-            print(f'- {username} ({review["stars"]}):'
+            username = user_col.find_one({"user_id": userid})
+            print(f'- {username["name"]} ({review["stars"]}):'
                   f' {review["text"]}.'
                   f' {review["date"]}')
 
@@ -363,7 +363,7 @@ def checkin():
         print()
         date = datetime.datetime.now()
         checkin_col.update({"business_id": store['business_id']},
-                           {"$push": {
+                           {"$set": {
                                "date": date.strftime("%Y-%m-%d %H:%M:%S")}})
         print(f'Thank you for checking in at {store["name"]}-{postal_code}')
 
@@ -382,10 +382,9 @@ def count_checkin():
             continue
 
         id = business_object['business_id']
-        checkin_object = checkin_col.find({"business_id": id})
+        checkin_object = checkin_col.findOne({"business_id": id})
 
-        for checkin in checkin_object:
-            num = len(checkin['date'].split(","))
+        num = len(checkin['date'].split(","))
         
         print(f'This business has {num} check-ins.')
 
@@ -404,14 +403,13 @@ def find_reviews():
         elif business_object is None:
             continue
         id = business_object['business_id']
-        review_object = review_col.find({"business_id": id}).limit(10)
+        review_object = review_col.find({"business_id": id})
         print(f'{business_object["name"]} has'
               f' {business_object["review_count"]} '
               f'reviews:')
         for review in review_object:
             userid = review['user_id']
-            username = user_col.find({"user_id": userid})
-            print(f'- {username} ({review["stars"]}):'
+            print(f'- ({review["stars"]}):'
                   f' {review["text"]}.'
                   f' {review["date"]}')
 
